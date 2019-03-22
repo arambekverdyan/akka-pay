@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - ActorHierarchyExperiments",
+            "request": "launch",
+            "mainClass": "akka.hierarchy.ActorHierarchyExperiments",
+            "projectName": "akka-play"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - App",
             "request": "launch",
             "mainClass": "akka.play.App",
