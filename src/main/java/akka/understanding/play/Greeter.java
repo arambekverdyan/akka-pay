@@ -1,9 +1,9 @@
-package akka.play;
+package akka.understanding.play;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.play.Printer.Greeting;
+import akka.understanding.play.Printer.Greeting;
 
 //#greeter-messages
 public class Greeter extends AbstractActor {

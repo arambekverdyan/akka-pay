@@ -1,4 +1,4 @@
-package akka.play;
+package akka.understanding.play;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;
