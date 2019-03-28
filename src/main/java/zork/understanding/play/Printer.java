@@ -1,4 +1,4 @@
-package akka.understanding.play;
+package zork.understanding.play;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;

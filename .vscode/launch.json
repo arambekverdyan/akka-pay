@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - ZorkMain",
+            "request": "launch",
+            "mainClass": "zork.ZorkMain",
+            "projectName": "zork"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - ActorHierarchyExperiments",
             "request": "launch",
             "mainClass": "akka.hierarchy.ActorHierarchyExperiments",

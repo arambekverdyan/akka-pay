@@ -1,4 +1,4 @@
-package akka.zork.enviromnment;
+package zork.enviromnment;
 
 import java.util.Optional;
 

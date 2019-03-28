@@ -1,4 +1,4 @@
-package akka.understanding.failurehandling;
+package zork.understanding.failurehandling;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;

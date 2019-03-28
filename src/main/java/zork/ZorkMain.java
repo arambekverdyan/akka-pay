@@ -1,4 +1,4 @@
-package akka.zork;
+package zork;
 
 import java.io.IOException;
 

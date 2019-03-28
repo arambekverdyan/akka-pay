@@ -1,4 +1,4 @@
-package akka.understanding.lifecyclehooks;
+package zork.understanding.lifecyclehooks;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;

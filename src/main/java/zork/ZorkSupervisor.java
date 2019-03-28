@@ -1,4 +1,4 @@
-package akka.zork;
+package zork;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;

@@ -1,4 +1,4 @@
-package akka.understanding.hierarchy;
+package zork.understanding.hierarchy;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
