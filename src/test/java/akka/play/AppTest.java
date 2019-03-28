@@ -4,14 +4,12 @@ package akka.play;
  */
 import org.junit.Test;
 
-import akka.understanding.play.App;
-
 import static org.junit.Assert.*;
 
 public class AppTest {
   @Test
   public void testAppHasAGreeting() {
-    App classUnderTest = new App();
+    // App classUnderTest = new App();
     // assertNotNull("app should have a greeting", classUnderTest.getGreeting());
   }
 }

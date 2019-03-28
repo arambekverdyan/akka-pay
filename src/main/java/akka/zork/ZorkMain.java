@@ -11,7 +11,7 @@ import akka.actor.ActorSystem;
 public class ZorkMain {
 
   public static void main(String... args) {
-    ActorSystem system = ActorSystem.create("iot-system");
+    ActorSystem system = ActorSystem.create("zork-system");
 
     try {
       // Create top level supervisor
