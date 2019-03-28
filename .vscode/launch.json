@@ -5,14 +5,14 @@
             "name": "CodeLens (Launch) - ActorHierarchyExperiments",
             "request": "launch",
             "mainClass": "akka.hierarchy.ActorHierarchyExperiments",
-            "projectName": "akka-play"
+            "projectName": "zork"
         },
         {
             "type": "java",
             "name": "CodeLens (Launch) - App",
             "request": "launch",
             "mainClass": "akka.play.App",
-            "projectName": "akka-play"
+            "projectName": "zork"
         }
     ]
 }
