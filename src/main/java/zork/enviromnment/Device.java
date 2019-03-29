@@ -7,7 +7,7 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 
-class Device extends AbstractActor {
+public class Device extends AbstractActor {
   private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
   final String groupId;
@@ -22,8 +22,26 @@ class Device extends AbstractActor {
     return Props.create(Device.class, () -> new Device(groupId, deviceId));
   }
 
-  public static final class ReadTemperature {
+  public static final class RecordTemperature {
     final long requestId;
+    final double value;
+
+    public RecordTemperature(long requestId, double value) {
+      this.requestId = requestId;
+      this.value = value;
+    }
+  }
+
+  public static final class TemperatureRecorded {
+    public final long requestId;
+
+    public TemperatureRecorded(long requestId) {
+      this.requestId = requestId;
+    }
+  }
+
+  public static final class ReadTemperature {
+    public final long requestId;
 
     public ReadTemperature(long requestId) {
       this.requestId = requestId;
@@ -31,8 +49,8 @@ class Device extends AbstractActor {
   }
 
   public static final class RespondTemperature {
-    final long requestId;
-    final Optional<Double> value;
+    public final long requestId;
+    public final Optional<Double> value;
 
     public RespondTemperature(long requestId, Optional<Double> value) {
       this.requestId = requestId;
@@ -54,7 +72,12 @@ class Device extends AbstractActor {
 
   @Override
   public Receive createReceive() {
-    return receiveBuilder().match(ReadTemperature.class, r -> {
+    return receiveBuilder()
+    .match(RecordTemperature.class, r -> {
+      log.info("Recorded temperature reading {} with {}", r.value, r.requestId);
+      lastTemperatureReading = Optional.of(r.value);
+      getSender().tell(new TemperatureRecorded(r.requestId), getSelf());
+    }).match(ReadTemperature.class, r -> {
       getSender().tell(new RespondTemperature(r.requestId, lastTemperatureReading), getSelf());
     }).build();
   }
