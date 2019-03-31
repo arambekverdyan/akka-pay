@@ -6,6 +6,8 @@ import akka.actor.AbstractActor;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import zork.enviromnment.DeviceManager.DeviceRegistered;
+import zork.enviromnment.DeviceManager.RequestTrackDevice;
 
 public class Device extends AbstractActor {
   private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
@@ -73,6 +75,19 @@ public class Device extends AbstractActor {
   @Override
   public Receive createReceive() {
     return receiveBuilder()
+    .match(RequestTrackDevice.class, r -> {
+      if (this.groupId.equals(r.groupId) && this.deviceId.equals(r.deviceId)) {
+        getSender().tell(new DeviceRegistered(), getSelf());
+      } else {
+        log.warning(
+          "Ignoring TrackDevice request for {}-{}. This actor is responsible for {}-{}.",
+          r.groupId,
+          r.deviceId,
+          this.groupId,
+          this.deviceId
+        );
+      }
+    })
     .match(RecordTemperature.class, r -> {
       log.info("Recorded temperature reading {} with {}", r.value, r.requestId);
       lastTemperatureReading = Optional.of(r.value);

@@ -14,8 +14,8 @@ import org.junit.Test;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.testkit.javadsl.TestKit;
-import scala.concurrent.duration.Duration;
 import zork.enviromnment.Device;
+import zork.enviromnment.DeviceManager;
 
 public class DeviceTest {
   static ActorSystem system;
@@ -27,8 +27,30 @@ public class DeviceTest {
 
   @AfterClass
   public static void teardown() {
-    TestKit.shutdownActorSystem(system, Duration.Zero(), true);
+    TestKit.shutdownActorSystem(system);
     system = null;
+  }
+
+  @Test
+  public void testReplyToRegistrationRequests() {
+    TestKit probe = new TestKit(system);
+    ActorRef deviceActor = system.actorOf(Device.props("groupId", "deviceId"));
+
+    deviceActor.tell(new DeviceManager.RequestTrackDevice("groupId", "deviceId"), probe.getRef());
+    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    assertEquals(deviceActor, probe.getLastSender());
+  }
+
+  @Test
+  public void testIgnoreWrongRegistrationRequests() {
+    TestKit probe = new TestKit(system);
+    ActorRef deviceActor = system.actorOf(Device.props("group", "device"));
+
+    deviceActor.tell(new DeviceManager.RequestTrackDevice("some wrong group", "some wrong device"), probe.getRef());
+    probe.expectNoMessage();
+
+    deviceActor.tell(new DeviceManager.RequestTrackDevice("group", "some wrong device"), probe.getRef());
+    probe.expectNoMessage();
   }
 
   @Test
