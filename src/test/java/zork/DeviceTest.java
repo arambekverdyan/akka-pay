@@ -15,6 +15,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.testkit.javadsl.TestKit;
 import zork.enviromnment.Device;
+import zork.enviromnment.messages.DeviceFunctionality;
 import zork.enviromnment.messages.DeviceLifecycle;
 
 public class DeviceTest {
@@ -58,16 +59,16 @@ public class DeviceTest {
     TestKit probe = new TestKit(system);
     ActorRef deviceActor = system.actorOf(Device.props("groupId", "deviceId"));
 
-    deviceActor.tell(new Device.RecordTemperature(1L, 24.0), probe.getRef());
-    assertEquals(1L, probe.expectMsgClass(Device.TemperatureRecorded.class).requestId);
+    deviceActor.tell(new DeviceFunctionality.RecordTemperature(1L, 24.0), probe.getRef());
+    assertEquals(1L, probe.expectMsgClass(DeviceFunctionality.TemperatureRecorded.class).requestId);
 
-    deviceActor.tell(new Device.ReadTemperature(2L), probe.getRef());
-    Device.RespondTemperature response1 = probe.expectMsgClass(Device.RespondTemperature.class);
+    deviceActor.tell(new DeviceFunctionality.ReadTemperature(2L), probe.getRef());
+    DeviceFunctionality.RespondTemperature response1 = probe.expectMsgClass(DeviceFunctionality.RespondTemperature.class);
     assertEquals(2L, response1.requestId);
     assertEquals(Optional.of(24.0), response1.value);
 
-    deviceActor.tell(new Device.ReadTemperature(4L), probe.getRef());
-    Device.RespondTemperature response2 = probe.expectMsgClass(Device.RespondTemperature.class);
+    deviceActor.tell(new DeviceFunctionality.ReadTemperature(4L), probe.getRef());
+    DeviceFunctionality.RespondTemperature response2 = probe.expectMsgClass(DeviceFunctionality.RespondTemperature.class);
     assertEquals(4L, response2.requestId);
     assertEquals(Optional.of(55.0), response2.value);
   }
@@ -76,8 +77,8 @@ public class DeviceTest {
   public void testReplyWithEmptyReadingIfNoTemperatureIsKnown() {
     TestKit probe = new TestKit(system);
     ActorRef deviceActor = system.actorOf(Device.props("group", "device"));
-    deviceActor.tell(new Device.ReadTemperature(42L), probe.getRef());
-    Device.RespondTemperature respond = probe.expectMsgClass(Device.RespondTemperature.class);
+    deviceActor.tell(new DeviceFunctionality.ReadTemperature(42L), probe.getRef());
+    DeviceFunctionality.RespondTemperature respond = probe.expectMsgClass(DeviceFunctionality.RespondTemperature.class);
     assertEquals(42L, respond.requestId);
     assertEquals(Optional.empty(), respond.value);
   }

@@ -14,8 +14,8 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.PoisonPill;
 import akka.testkit.javadsl.TestKit;
-import zork.enviromnment.Device;
 import zork.enviromnment.DeviceGroup;
+import zork.enviromnment.messages.DeviceFunctionality;
 import zork.enviromnment.messages.DeviceLifecycle;
 
 public class DeviceGroupTest {
@@ -96,10 +96,10 @@ public class DeviceGroupTest {
     assertNotEquals(device1, device2);
 
     // Check that the device actors are working
-    device1.tell(new Device.RecordTemperature(0L, 1.0), probe.getRef());
-    assertEquals(0L, probe.expectMsgClass(Device.TemperatureRecorded.class).requestId);
-    device2.tell(new Device.RecordTemperature(1L, 2.0), probe.getRef());
-    assertEquals(1L, probe.expectMsgClass(Device.TemperatureRecorded.class).requestId);
+    device1.tell(new DeviceFunctionality.RecordTemperature(0L, 1.0), probe.getRef());
+    assertEquals(0L, probe.expectMsgClass(DeviceFunctionality.TemperatureRecorded.class).requestId);
+    device2.tell(new DeviceFunctionality.RecordTemperature(1L, 2.0), probe.getRef());
+    assertEquals(1L, probe.expectMsgClass(DeviceFunctionality.TemperatureRecorded.class).requestId);
   }
 
   @Test
