@@ -10,6 +10,7 @@ import akka.actor.Props;
 import akka.actor.Terminated;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import zork.enviromnment.messages.DeviceLifecycle;
 
 public class DeviceGroup extends AbstractActor {
   private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
@@ -55,7 +56,7 @@ public class DeviceGroup extends AbstractActor {
     log.info("DeviceGroup {} stopped", groupId);
   }
 
-  private void onTrackDevice(DeviceManager.RequestTrackDevice trackMsg) {
+  private void onTrackDevice(DeviceLifecycle.RequestTrackDevice trackMsg) {
     if (this.groupId.equals(trackMsg.groupId)) {
       ActorRef device = deviceIdToActor.get(trackMsg.deviceId);
       if (device == null) {
@@ -92,7 +93,7 @@ trackMsg.deviceId);
   @Override
   public Receive createReceive() {
     return receiveBuilder()
-    .match(DeviceManager.RequestTrackDevice.class, this::onTrackDevice)
+    .match(DeviceLifecycle.RequestTrackDevice.class, this::onTrackDevice)
     .match(RequestDeviceList.class, this::onDeviceList)
     .match(Terminated.class, this::onTerminated)
     .build();

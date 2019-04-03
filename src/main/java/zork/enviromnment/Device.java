@@ -6,8 +6,8 @@ import akka.actor.AbstractActor;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import zork.enviromnment.DeviceManager.DeviceRegistered;
-import zork.enviromnment.DeviceManager.RequestTrackDevice;
+import zork.enviromnment.messages.DeviceLifecycle.DeviceRegistered;
+import zork.enviromnment.messages.DeviceLifecycle.RequestTrackDevice;
 
 public class Device extends AbstractActor {
   private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);

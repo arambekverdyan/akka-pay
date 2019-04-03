@@ -15,7 +15,7 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.testkit.javadsl.TestKit;
 import zork.enviromnment.Device;
-import zork.enviromnment.DeviceManager;
+import zork.enviromnment.messages.DeviceLifecycle;
 
 public class DeviceTest {
   static ActorSystem system;
@@ -36,8 +36,8 @@ public class DeviceTest {
     TestKit probe = new TestKit(system);
     ActorRef deviceActor = system.actorOf(Device.props("groupId", "deviceId"));
 
-    deviceActor.tell(new DeviceManager.RequestTrackDevice("groupId", "deviceId"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    deviceActor.tell(new DeviceLifecycle.RequestTrackDevice("groupId", "deviceId"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
     assertEquals(deviceActor, probe.getLastSender());
   }
 
@@ -46,10 +46,10 @@ public class DeviceTest {
     TestKit probe = new TestKit(system);
     ActorRef deviceActor = system.actorOf(Device.props("group", "device"));
 
-    deviceActor.tell(new DeviceManager.RequestTrackDevice("some wrong group", "some wrong device"), probe.getRef());
+    deviceActor.tell(new DeviceLifecycle.RequestTrackDevice("some wrong group", "some wrong device"), probe.getRef());
     probe.expectNoMessage();
 
-    deviceActor.tell(new DeviceManager.RequestTrackDevice("group", "some wrong device"), probe.getRef());
+    deviceActor.tell(new DeviceLifecycle.RequestTrackDevice("group", "some wrong device"), probe.getRef());
     probe.expectNoMessage();
   }
 

@@ -9,25 +9,13 @@ import akka.actor.Props;
 import akka.actor.Terminated;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import zork.enviromnment.messages.DeviceLifecycle.RequestTrackDevice;
 
 public class DeviceManager extends AbstractActor {
   private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
 
   public static Props props() {
     return Props.create(DeviceManager.class, DeviceManager::new);
-  }
-
-  public static final class RequestTrackDevice {
-    public final String groupId;
-    public final String deviceId;
-
-    public RequestTrackDevice(String groupId, String deviceId) {
-      this.groupId = groupId;
-      this.deviceId = deviceId;
-    }
-  }
-
-  public static final class DeviceRegistered {
   }
 
   final Map<String, ActorRef> groupIdToActor = new HashMap<>();

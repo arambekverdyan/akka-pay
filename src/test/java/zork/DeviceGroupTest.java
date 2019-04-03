@@ -16,7 +16,7 @@ import akka.actor.PoisonPill;
 import akka.testkit.javadsl.TestKit;
 import zork.enviromnment.Device;
 import zork.enviromnment.DeviceGroup;
-import zork.enviromnment.DeviceManager;
+import zork.enviromnment.messages.DeviceLifecycle;
 
 public class DeviceGroupTest {
   static ActorSystem system;
@@ -36,11 +36,11 @@ public class DeviceGroupTest {
     TestKit probe = new TestKit(system);
     ActorRef group = system.actorOf(DeviceGroup.props("group"));
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device1"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device1"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device2"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device2"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
 
     group.tell(new DeviceGroup.RequestDeviceList(0L), probe.getRef());
     DeviceGroup.ReplyDeviceList reply = probe.expectMsgClass(DeviceGroup.ReplyDeviceList.class);
@@ -53,12 +53,12 @@ public class DeviceGroupTest {
     TestKit probe = new TestKit(system);
     ActorRef group = system.actorOf(DeviceGroup.props("group"));
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device1"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device1"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
     ActorRef toShutDown = probe.getLastSender();
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device2"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device2"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
 
     group.tell(new DeviceGroup.RequestDeviceList(0L), probe.getRef());
     DeviceGroup.ReplyDeviceList reply = probe.expectMsgClass(DeviceGroup.ReplyDeviceList.class);
@@ -86,12 +86,12 @@ public class DeviceGroupTest {
     TestKit probe = new TestKit(system);
     ActorRef group = system.actorOf(DeviceGroup.props("group"));
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device1"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device1"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
     ActorRef device1 = probe.getLastSender();
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device2"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device2"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
     ActorRef device2 = probe.getLastSender();
     assertNotEquals(device1, device2);
 
@@ -107,7 +107,7 @@ public class DeviceGroupTest {
     TestKit probe = new TestKit(system);
     ActorRef group = system.actorOf(DeviceGroup.props("group"));
 
-    group.tell(new DeviceManager.RequestTrackDevice("groupId", "device1"), probe.getRef());
+    group.tell(new DeviceLifecycle.RequestTrackDevice("groupId", "device1"), probe.getRef());
     probe.expectNoMessage();
   }
 
@@ -116,12 +116,12 @@ public class DeviceGroupTest {
     TestKit probe = new TestKit(system);
     ActorRef group = system.actorOf(DeviceGroup.props("group"));
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device1"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device1"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
     ActorRef device1 = probe.getLastSender();
 
-    group.tell(new DeviceManager.RequestTrackDevice("group", "device1"), probe.getRef());
-    probe.expectMsgClass(DeviceManager.DeviceRegistered.class);
+    group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device1"), probe.getRef());
+    probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
     ActorRef device2 = probe.getLastSender();
 
     assertEquals(device1, device2);
