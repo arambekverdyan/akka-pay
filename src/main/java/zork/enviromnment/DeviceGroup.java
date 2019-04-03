@@ -2,7 +2,6 @@ package zork.enviromnment;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -10,6 +9,7 @@ import akka.actor.Props;
 import akka.actor.Terminated;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import zork.enviromnment.messages.DeviceGroupOperations;
 import zork.enviromnment.messages.DeviceLifecycle;
 
 public class DeviceGroup extends AbstractActor {
@@ -23,24 +23,6 @@ public class DeviceGroup extends AbstractActor {
 
   public static Props props(String groupId) {
     return Props.create(DeviceGroup.class, () -> new DeviceGroup(groupId));
-  }
-
-  public static final class RequestDeviceList {
-    final long requestId;
-
-    public RequestDeviceList(long requestId) {
-      this.requestId = requestId;
-    }
-  }
-
-  public static final class ReplyDeviceList {
-    public final long requestId;
-    public final Set<String> ids;
-
-    public ReplyDeviceList(long requestId, Set<String> ids) {
-      this.requestId = requestId;
-      this.ids = ids;
-    }
   }
 
   final Map<String, ActorRef> deviceIdToActor = new HashMap<>();
@@ -61,8 +43,7 @@ public class DeviceGroup extends AbstractActor {
       ActorRef device = deviceIdToActor.get(trackMsg.deviceId);
       if (device == null) {
         log.info("Creating device actor for {}", trackMsg.deviceId);
-        device = getContext().actorOf(Device.props(groupId, trackMsg.deviceId),
-trackMsg.deviceId);
+        device = getContext().actorOf(Device.props(groupId, trackMsg.deviceId), trackMsg.deviceId);
         getContext().watch(device);
         actorToDeviceId.put(device, trackMsg.deviceId);
         deviceIdToActor.put(trackMsg.deviceId, device);
@@ -71,15 +52,12 @@ trackMsg.deviceId);
         device.forward(trackMsg, getContext());
       }
     } else {
-      log.warning(
-        "Ingnoring TrackDevice request for {}. This actor is responsible for {}.",
-        groupId,
-        this.groupId);
+      log.warning("Ingnoring TrackDevice request for {}. This actor is responsible for {}.", groupId, this.groupId);
     }
   }
 
-  private void onDeviceList(RequestDeviceList t) {
-    getSender().tell(new ReplyDeviceList(t.requestId, deviceIdToActor.keySet()), getSelf());
+  private void onDeviceList(DeviceGroupOperations.RequestDeviceList t) {
+    getSender().tell(new DeviceGroupOperations.ReplyDeviceList(t.requestId, deviceIdToActor.keySet()), getSelf());
   }
 
   private void onTerminated(Terminated t) {
@@ -94,7 +72,7 @@ trackMsg.deviceId);
   public Receive createReceive() {
     return receiveBuilder()
     .match(DeviceLifecycle.RequestTrackDevice.class, this::onTrackDevice)
-    .match(RequestDeviceList.class, this::onDeviceList)
+    .match(DeviceGroupOperations.RequestDeviceList.class, this::onDeviceList)
     .match(Terminated.class, this::onTerminated)
     .build();
   }

@@ -16,6 +16,7 @@ import akka.actor.PoisonPill;
 import akka.testkit.javadsl.TestKit;
 import zork.enviromnment.DeviceGroup;
 import zork.enviromnment.messages.DeviceFunctionality;
+import zork.enviromnment.messages.DeviceGroupOperations;
 import zork.enviromnment.messages.DeviceLifecycle;
 
 public class DeviceGroupTest {
@@ -42,8 +43,8 @@ public class DeviceGroupTest {
     group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device2"), probe.getRef());
     probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
 
-    group.tell(new DeviceGroup.RequestDeviceList(0L), probe.getRef());
-    DeviceGroup.ReplyDeviceList reply = probe.expectMsgClass(DeviceGroup.ReplyDeviceList.class);
+    group.tell(new DeviceGroupOperations.RequestDeviceList(0L), probe.getRef());
+    DeviceGroupOperations.ReplyDeviceList reply = probe.expectMsgClass(DeviceGroupOperations.ReplyDeviceList.class);
     assertEquals(0L, reply.requestId);
     assertEquals(Stream.of("device1", "device2").collect(Collectors.toSet()), reply.ids);
   }
@@ -60,8 +61,8 @@ public class DeviceGroupTest {
     group.tell(new DeviceLifecycle.RequestTrackDevice("group", "device2"), probe.getRef());
     probe.expectMsgClass(DeviceLifecycle.DeviceRegistered.class);
 
-    group.tell(new DeviceGroup.RequestDeviceList(0L), probe.getRef());
-    DeviceGroup.ReplyDeviceList reply = probe.expectMsgClass(DeviceGroup.ReplyDeviceList.class);
+    group.tell(new DeviceGroupOperations.RequestDeviceList(0L), probe.getRef());
+    DeviceGroupOperations.ReplyDeviceList reply = probe.expectMsgClass(DeviceGroupOperations.ReplyDeviceList.class);
     assertEquals(0L, reply.requestId);
     assertEquals(Stream.of("device1", "device2").collect(Collectors.toSet()), reply.ids);
 
@@ -72,8 +73,8 @@ public class DeviceGroupTest {
     // using awaitAssert to retry because it might take longer for the groupActor
     // to see the Terminated, that order is undefined
     probe.awaitAssert(() -> {
-      group.tell(new DeviceGroup.RequestDeviceList(1L), probe.getRef());
-      DeviceGroup.ReplyDeviceList r = probe.expectMsgClass(DeviceGroup.ReplyDeviceList.class);
+      group.tell(new DeviceGroupOperations.RequestDeviceList(1L), probe.getRef());
+      DeviceGroupOperations.ReplyDeviceList r = probe.expectMsgClass(DeviceGroupOperations.ReplyDeviceList.class);
       assertEquals(1L, r.requestId);
       assertEquals(Stream.of("device2").collect(Collectors.toSet()), r.ids);
       return null;
