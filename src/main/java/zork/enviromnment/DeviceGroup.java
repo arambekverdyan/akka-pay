@@ -61,7 +61,9 @@ public class DeviceGroup extends AbstractActor {
       if (device == null) {
         log.info("Creating device actor for {}", trackMsg.deviceId);
         device = getContext().actorOf(Device.props(groupId, trackMsg.deviceId),
-"device-" + trackMsg.deviceId);
+trackMsg.deviceId);
+        getContext().watch(device);
+        actorToDeviceId.put(device, trackMsg.deviceId);
         deviceIdToActor.put(trackMsg.deviceId, device);
         device.forward(trackMsg, getContext());
       } else {

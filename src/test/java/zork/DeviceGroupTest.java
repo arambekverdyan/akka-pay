@@ -69,7 +69,6 @@ public class DeviceGroupTest {
     toShutDown.tell(PoisonPill.getInstance(), ActorRef.noSender());
     probe.expectTerminated(toShutDown);
 
-    // TODO fix the issue with device removal from group list
     // using awaitAssert to retry because it might take longer for the groupActor
     // to see the Terminated, that order is undefined
     probe.awaitAssert(() -> {
