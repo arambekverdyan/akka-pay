@@ -7,7 +7,10 @@ import org.junit.Test;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.testkit.javadsl.TestKit;
+import zork.enviromnment.DeviceGroup;
 import zork.enviromnment.DeviceManager;
+import zork.enviromnment.messages.Group.GroupRegistered;
+import zork.enviromnment.messages.Group.RequestTrackGroup;
 
 public class DeviceManagerTest {
   static ActorSystem system;
@@ -27,6 +30,11 @@ public class DeviceManagerTest {
     TestKit probe = new TestKit(system);
     ActorRef manager = system.actorOf(DeviceManager.props());
 
-    // manager.tell(msg, sender);
+    manager.tell(new RequestTrackGroup("group1"), probe.getRef());
+    GroupRegistered group1 = probe.expectMsgClass(GroupRegistered.class);
+
+    
+
+
   }
 }
